@@ -27,9 +27,7 @@ namespace BlazingTrails.Client.Features.Home
         }
 
         private void HandleTrailSelected(Trail trail)
-        {
-            _selectedTrail = trail;
-            StateHasChanged();
-        }
+            => _selectedTrail = trail;
+
     }
 }
