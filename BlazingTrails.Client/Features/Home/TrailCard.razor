@@ -7,9 +7,13 @@
             <span><span class="oi oi-clock mr-2"></span> @Trail.TimeFormatted</span>
             <span><span class="oi oi-infinity mr-2"></span> @Trail.Length km</span>
         </div>
+        <button class="btn btn-primary" title="View" @onclick="@(() => OnSelected?.Invoke(Trail))">
+            <i class="bi bi-binoculars"></i>
+        </button>
     </div>
 </div>
 
 @code {
     [Parameter] public Trail Trail { get; set; }
+    [Parameter] public Action<Trail> OnSelected { get; set; }
 }

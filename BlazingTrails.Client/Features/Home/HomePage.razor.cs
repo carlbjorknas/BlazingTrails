@@ -10,6 +10,7 @@ namespace BlazingTrails.Client.Features.Home
     public partial class HomePage : ComponentBase
     {
         private IEnumerable<Trail> _trails;
+        private Trail _selectedTrail;
 
         [Inject] public HttpClient Http { get; set; }
 
@@ -23,6 +24,12 @@ namespace BlazingTrails.Client.Features.Home
             {
                 Console.WriteLine($"There was a problem loading trail data: {ex.Message}");
             }
+        }
+
+        private void HandleTrailSelected(Trail trail)
+        {
+            _selectedTrail = trail;
+            StateHasChanged();
         }
     }
 }
