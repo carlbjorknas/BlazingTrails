@@ -6,6 +6,11 @@
            type="number"
            class="form-control"
            @bind="_maxLength" />
+    <label for="maxTime">Max Time (hours)</label>
+    <input id="maxTime"
+           type="number"
+           class="form-control"
+           @bind="_maxTime" />
     <button class="btn btn-outline-primary"
             @onclick="FilterSearchResults">
         Filter
@@ -18,15 +23,39 @@
 
 @code {
     private int _maxLength;
+    private int _maxTime;
 
     [Parameter] public string SearchTerm { get; set; }
 
+    protected override void OnInitialized()
+    {
+        NavManager.TryGetQueryString<int>("maxlength", out _maxLength);
+        NavManager.TryGetQueryString<int>("maxtime", out _maxTime);
+    }
+
     private void FilterSearchResults()
-        => NavManager.NavigateTo($"/search/{SearchTerm}/maxlength/{_maxLength}");
+    {
+        // Returns a HttpValueCollection dressed as a NameValueCollection, with ToString() overridden.
+        var queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
+
+        if (_maxLength > 0)
+            queryString.Add("maxlength", _maxLength.ToString());
+
+        if (_maxTime > 0)
+            queryString.Add("maxtime", _maxTime.ToString());
+
+        if (queryString.Count == 0)
+        {
+            return;
+        }
+
+        NavManager.NavigateTo($"/search/{SearchTerm}?{queryString.ToString()}");
+    }
 
     private void ClearSearchFilter()
     {
         _maxLength = 0;
+        _maxTime = 0;
         NavManager.NavigateTo($"/search/{SearchTerm}");
     }
 }

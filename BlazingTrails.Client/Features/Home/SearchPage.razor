@@ -3,6 +3,7 @@
 
 @inject HttpClient Http
 @inject NavigationManager NavManager
+@implements IDisposable
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -47,6 +48,10 @@ else
                 x.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase) ||
                 x.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase));
             _cachedSearchResults = _searchResults;
+            NavManager.LocationChanged += HandleLocationChanged;
+
+            // Handle filters in case the user comes here directly with filters in the url. From a bookmark for example.
+            UpdateFilters();
         }
         catch (HttpRequestException ex)
         {
@@ -54,18 +59,35 @@ else
         }
     }
 
-    protected override void OnParametersSet()
+    private void UpdateFilters()
     {
-        if (_cachedSearchResults.Any() && MaxLength.HasValue)
+        var filters = new List<Func<Trail, bool>>();
+        NavManager.TryGetQueryString<int>("maxlength", out var maxLength);
+        NavManager.TryGetQueryString<int>("maxtime", out var maxTime);
+
+        if (maxLength > 0)
         {
-            _searchResults = _cachedSearchResults.Where(_ => _.Length <= MaxLength.Value);
+            filters.Add(x => x.Length <= maxLength);
         }
-        else if (_cachedSearchResults.Any() && MaxLength is null)
+
+        if (maxTime > 0)
         {
-            _searchResults = _cachedSearchResults;
+            filters.Add(x => x.TimeInMinutes <= maxTime * 60);
         }
+
+        _searchResults = filters.Any()
+                ? _cachedSearchResults.Where(trail => filters.All(filter => filter(trail)))
+                : _cachedSearchResults;
+
+        StateHasChanged();
     }
 
     private void HandleTrailSelected(Trail trail)
         => _selectedTrail = trail;
+
+    private void HandleLocationChanged(object sender, LocationChangedEventArgs args)
+        => UpdateFilters();
+
+    public void Dispose()
+        => NavManager.LocationChanged -= HandleLocationChanged;
 }
