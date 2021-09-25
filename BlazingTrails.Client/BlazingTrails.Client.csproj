@@ -18,7 +18,8 @@
     -->
     <ItemGroup>
         <Watch Include="**/*.scss" />
-        <Watch Remove="Features\Home\TrailSearch.razor.scss" />
+        <!-- The line below was added automatically, seems to be a bug https://github.com/dotnet/aspnetcore/issues/9922 -->
+        <!--<Watch Remove="Features\Home\TrailSearch.razor.scss" />-->
         <None Update="**/*.css" Watch="false" />
     </ItemGroup>
 
