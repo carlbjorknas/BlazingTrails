@@ -19,6 +19,7 @@
     -->
     <ItemGroup>
         <Watch Include="**/*.scss" />
+        <ProjectReference Include="..\BlazingTrails.Shared\BlazingTrails.Shared.csproj" />
         <!--<Watch Remove="Features\Home\SearchFilter.razor.scss" />-->
         <!-- The line below was added automatically, seems to be a bug https://github.com/dotnet/aspnetcore/issues/9922 -->
         <!--<Watch Remove="Features\Home\TrailSearch.razor.scss" />-->
