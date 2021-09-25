@@ -30,6 +30,7 @@ namespace BlazingTrails.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseWebAssemblyDebugging();
             }
 
             app.UseHttpsRedirection();
