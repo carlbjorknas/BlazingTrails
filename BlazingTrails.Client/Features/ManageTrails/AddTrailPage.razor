@@ -65,6 +65,12 @@ else if (errorMessage.Length > 0)
             <ValidationMessage For="@(() => _trail.Length)" />
         </FormFieldSet>
 
+        <FormFieldSet Width="col-5">
+            <label for="trailTime" class="font-weight-bold text-secondary">Time</label>
+            <InputTime @bind-Value="_trail.TimeInMinutes" id="trailTime" />
+            <ValidationMessage For="@(() => _trail.TimeInMinutes)" />
+        </FormFieldSet>
+
     </FormSection>
 
     <FormSection Title="Route Instructions"

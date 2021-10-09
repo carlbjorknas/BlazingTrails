@@ -30,6 +30,7 @@ namespace BlazingTrails.Shared.Features.ManageTrails
             RuleFor(_ => _.Length).GreaterThan(0).WithMessage("Please enter a length");
             RuleFor(_ => _.Route).NotEmpty().WithMessage("Please add a route instruction");
             RuleForEach(_ => _.Route).SetValidator(new RouteInstructionValidator());
+            RuleFor(_ => _.TimeInMinutes).GreaterThan(0).WithMessage("Please enter a time");
         }
     }
 
