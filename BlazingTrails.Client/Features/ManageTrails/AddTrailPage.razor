@@ -29,7 +29,7 @@ else if (errorMessage.Length > 0)
     </div>
 }
 
-<EditForm Model="_trail" OnValidSubmit="SubmitForm">
+<EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
 
     <FluentValidationValidator />
 
@@ -110,7 +110,7 @@ else if (errorMessage.Length > 0)
     <div class="mt-4 mb-5">
         <div class="row">
             <div class="offset-4 col-8 text-right">
-                <button class="btn btn-outline-secondary" type="button" @onclick="@(() => _trail = new TrailDto())">Reset</button>
+                <button class="btn btn-outline-secondary" type="button" @onclick="@ResetForm">Reset</button>
                 <button class="btn btn-primary" type="submit">Submit</button>
             </div>
         </div>
@@ -119,10 +119,24 @@ else if (errorMessage.Length > 0)
 </EditForm>
 
 @code {
-    TrailDto _trail = new TrailDto();
+    TrailDto _trail;
     bool submitSuccessful;
-    string errorMessage = "";
+    string errorMessage;
+    EditContext _editContext;
 
+    protected override void OnInitialized()
+    {
+        ResetForm();
+    }
+
+    private void ResetForm()
+    {
+        _trail = new TrailDto();
+        _editContext = new EditContext(_trail);
+        _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
+        errorMessage = "";
+        submitSuccessful = false;
+    }
 
     private async Task SubmitForm()
     {
@@ -134,8 +148,7 @@ else if (errorMessage.Length > 0)
             return;
         }
 
-        _trail = new TrailDto();
-        errorMessage = "";
+        ResetForm();
         submitSuccessful = true;
     }
 }
