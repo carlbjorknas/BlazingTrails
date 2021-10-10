@@ -1,7 +1,6 @@
 ﻿using BlazingTrails.Shared.Features.ManageTrails.Shared;
 using MediatR;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,7 +27,7 @@ namespace BlazingTrails.Client.Features.ManageTrails.Shared
 
             if (response.IsSuccessStatusCode)
             {
-                var imageName = await response.Content.ReadFromJsonAsync<string>(cancellationToken: cancellationToken);
+                var imageName = await response.Content.ReadAsStringAsync(cancellationToken);
                 return new UploadTrailImageRequest.Response(imageName);
             }
             else

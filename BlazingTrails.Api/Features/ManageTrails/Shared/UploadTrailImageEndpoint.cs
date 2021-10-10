@@ -14,7 +14,7 @@ namespace BlazingTrails.Api.Features.ManageTrails.Shared
 {
     public class UploadTrailImageEndpoint : BaseAsyncEndpoint
         .WithRequest<int>
-        .WithResponse<bool>
+        .WithResponse<string>
     {
         private readonly BlazingTrailsContext _database;
 
@@ -24,7 +24,7 @@ namespace BlazingTrails.Api.Features.ManageTrails.Shared
         }
 
         [HttpPost(UploadTrailImageRequest.RouteTemplate)]
-        public override async Task<ActionResult<bool>> HandleAsync([FromRoute] int trailId, CancellationToken cancellationToken = default)
+        public override async Task<ActionResult<string>> HandleAsync([FromRoute] int trailId, CancellationToken cancellationToken = default)
         {
             var trail = await _database.Trails.SingleOrDefaultAsync(_ => _.Id == trailId, cancellationToken);
             if (trail is null)
@@ -59,7 +59,7 @@ namespace BlazingTrails.Api.Features.ManageTrails.Shared
             trail.Image = filename;
             await _database.SaveChangesAsync(cancellationToken);
 
-            return Ok(true);
+            return Ok(filename);
         }
     }
 }
