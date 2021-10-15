@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlazingTrails.Client.Features.Home
+namespace BlazingTrails.Client.Features.Home.Shared
 {
     public class Trail
     {

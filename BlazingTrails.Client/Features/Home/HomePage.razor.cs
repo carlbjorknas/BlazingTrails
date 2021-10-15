@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using BlazingTrails.Client.Features.Home.Shared;
+using BlazingTrails.Shared.Features.Home.Shared;
+using MediatR;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace BlazingTrails.Client.Features.Home
@@ -12,13 +15,23 @@ namespace BlazingTrails.Client.Features.Home
         private IEnumerable<Trail> _trails;
         private Trail _selectedTrail;
 
-        [Inject] public HttpClient Http { get; set; }
+        [Inject] public IMediator Mediator { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
             try
             {
-                _trails = await Http.GetFromJsonAsync<IEnumerable<Trail>>("trails/trail-data.json");
+                var response = await Mediator.Send(new GetTrailsRequest());
+                _trails = response.Trails.Select(_ => new Trail
+                {
+                    Id = _.Id,
+                    Name = _.Name,
+                    Image = _.Image,
+                    Description = _.Description,
+                    Location = _.Location,
+                    Length = _.Length,
+                    TimeInMinutes = _.TimeInMinutes
+                });
             }
             catch (HttpRequestException ex)
             {

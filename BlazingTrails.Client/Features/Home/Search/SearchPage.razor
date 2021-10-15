@@ -1,7 +1,6 @@
 ﻿@page "/search/{searchterm}"
 @page "/search/{SearchTerm}/maxlength/{MaxLength:int}"
 
-@inject HttpClient Http
 @inject NavigationManager NavManager
 @implements IDisposable
 
@@ -36,6 +35,8 @@ else
     private IEnumerable<Trail> _searchResults;
     private Trail _selectedTrail;
 
+    [Inject] public Mediator Mediator { get; set; }
+
     [Parameter] public string SearchTerm { get; set; }
     [Parameter] public int? MaxLength { get; set; }
 
@@ -43,14 +44,22 @@ else
     {
         try
         {
-            var allTrails = await Http.GetFromJsonAsync<IEnumerable<Trail>>("trails/trail-data.json");
-            _searchResults = allTrails.Where(x =>
-                x.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase) ||
-                x.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase));
+            var response = await Mediator.Send(new GetTrailsRequest());
+            var allTrails = response.Trails.Select(_ => new Trail
+            {
+                Id = _.Id,
+                Name = _.Name,
+                Image = _.Image,
+                Description = _.Description,
+                Location = _.Location,
+                Length = _.Length,
+                TimeInMinutes = _.TimeInMinutes
+            });
+
+            _searchResults = allTrails.Where(_ => _.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase)
+                                           || _.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase));
             _cachedSearchResults = _searchResults;
             NavManager.LocationChanged += HandleLocationChanged;
-
-            // Handle filters in case the user comes here directly with filters in the url. From a bookmark for example.
             UpdateFilters();
         }
         catch (HttpRequestException ex)
