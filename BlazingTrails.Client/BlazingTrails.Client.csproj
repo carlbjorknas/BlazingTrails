@@ -22,6 +22,7 @@
     -->
     <ItemGroup>
         <Watch Include="**/*.scss" />
+        <Watch Remove="Features\Home\Shared\ViewSwitcher.razor.scss" />
         <!--<Watch Remove="Features\Home\HomePage.razor.scss" />-->
         <!--<Watch Remove="Features\ManageTrails\InputTime.razor.scss" />-->
         <!--<Watch Remove="Features\ManageTrails\FormSection.razor.scss" />-->
