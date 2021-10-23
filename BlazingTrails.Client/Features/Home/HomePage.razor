@@ -16,8 +16,8 @@ else if (_trails.Any())
         <p class="font-italic text-center">Do you have an awesome trail you'd like to share? <a href="add-trail">Add it here</a>.</p>
     </div>
 
-    <ViewSwitcher Items="_trails">
-        <GridTemplate Context="trail">
+    <ViewSwitcher Items="_trails" Context="trail">
+        <GridTemplate>
             <TrailCard Trail="trail" OnSelected="HandleTrailSelected" />
         </GridTemplate>
         <HeaderTemplate>
@@ -27,7 +27,7 @@ else if (_trails.Any())
             <th>Time</th>
             <th></th>
         </HeaderTemplate>
-        <RowTemplate Context="trail">
+        <RowTemplate>
             <th scope="col">@trail.Name</th>
             <td>@trail.Location</td>
             <td>@(trail.Length)km</td>
