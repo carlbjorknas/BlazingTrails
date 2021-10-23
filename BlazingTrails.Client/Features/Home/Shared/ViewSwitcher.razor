@@ -1,4 +1,6 @@
-﻿<div>
+﻿@typeparam TItem
+
+<div>
     <div class="mb-3 text-right">
         <div class="btn-group">
             <button @onclick="@(() => _mode = "Grid")" title="Grid View" type="button" class="btn @(_mode == "Grid" ? "btn-secondary" : "btn-outline-secondary")">
@@ -12,17 +14,38 @@
 
     @if (_mode == "Grid")
     {
-        @GridTemplate
+        <div class="grid">
+            @foreach (var item in Items)
+            {
+                @GridTemplate(item)
+            }
+        </div>
     }
     else if (_mode == "Table")
     {
-        @TableTemplate
+        <table>
+            <thead>
+                <tr>
+                    @HeaderTemplate
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Items)
+                {
+                    <tr>
+                        @RowTemplate(item)
+                    </tr>
+                }
+            </tbody>
+        </table>
     }
 </div>
 
 @code {
     private string _mode = "Grid";
 
-    [Parameter] public RenderFragment GridTemplate { get; set; }
-    [Parameter] public RenderFragment TableTemplate { get; set; }
+    [Parameter] public IEnumerable<TItem> Items { get; set; }
+    [Parameter] public RenderFragment<TItem> GridTemplate { get; set; }
+    [Parameter] public RenderFragment HeaderTemplate { get; set; }
+    [Parameter] public RenderFragment<TItem> RowTemplate { get; set; }
 }
