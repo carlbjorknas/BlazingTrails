@@ -17,8 +17,8 @@ else if (_trails.Any())
     </div>
 
     <ViewSwitcher Items="_trails">
-        <GridTemplate>
-            <TrailCard Trail="context" OnSelected="HandleTrailSelected" />
+        <GridTemplate Context="trail">
+            <TrailCard Trail="trail" OnSelected="HandleTrailSelected" />
         </GridTemplate>
         <HeaderTemplate>
             <th>Name</th>
@@ -27,16 +27,16 @@ else if (_trails.Any())
             <th>Time</th>
             <th></th>
         </HeaderTemplate>
-        <RowTemplate>
-            <th scope="col">@context.Name</th>
-            <td>@context.Location</td>
-            <td>@(context.Length)km</td>
-            <td>@context.TimeFormatted</td>
+        <RowTemplate Context="trail">
+            <th scope="col">@trail.Name</th>
+            <td>@trail.Location</td>
+            <td>@(trail.Length)km</td>
+            <td>@trail.TimeFormatted</td>
             <td class="text-right">
-                <button @onclick="@(() => HandleTrailSelected(context))" title="View" class="btn btn-primary">
+                <button @onclick="@(() => HandleTrailSelected(trail))" title="View" class="btn btn-primary">
                     <i class="bi bi-binoculars"></i>
                 </button>
-                <button @onclick="@(() => NavManager.NavigateTo($"/edit-trail/{context.Id}"))" title="Edit" class="btn btn-outline-secondary">
+                <button @onclick="@(() => NavManager.NavigateTo($"/edit-trail/{trail.Id}"))" title="Edit" class="btn btn-outline-secondary">
                     <i class="bi bi-pencil"></i>
                 </button>
             </td>
